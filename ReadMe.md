@@ -1,26 +1,13 @@
-package com.project.rxbasic02;
+# ADS04 Android
 
-import android.support.v7.app.AppCompatActivity;
-import android.os.Bundle;
-import android.support.v7.widget.LinearLayoutManager;
-import android.support.v7.widget.RecyclerView;
-import android.view.LayoutInflater;
-import android.view.View;
-import android.view.ViewGroup;
-import android.widget.TextView;
+## 수업 내용
+- rxJava에서 map, flatMap, zip을 학습
 
-import java.text.DateFormatSymbols;
-import java.util.ArrayList;
-import java.util.List;
+## Code Review
 
-import io.reactivex.Observable;
-import io.reactivex.ObservableEmitter;
-import io.reactivex.ObservableOnSubscribe;
-import io.reactivex.Scheduler;
-import io.reactivex.android.schedulers.AndroidSchedulers;
-import io.reactivex.schedulers.Schedulers;
+### MainActivity
 
-
+```Java
 public class MainActivity extends AppCompatActivity {
 
     RecyclerView recyler;
@@ -139,39 +126,71 @@ public class MainActivity extends AppCompatActivity {
                 );
     }
 }
+```
 
 
-class CustomAdapter extends RecyclerView.Adapter<CustomAdapter.Holder> {
-    List<String> data = new ArrayList<>();
+## 보충설명
 
-    public void setDataAndRefresh(List<String> data) {
-        this.data = data;
-        notifyDataSetChanged();
-    }
+### Map 
 
-    @Override
-    public Holder onCreateViewHolder(ViewGroup parent, int viewType) {
-        View view = LayoutInflater.from(parent.getContext())
-                .inflate(android.R.layout.simple_list_item_1, parent, false);
-        return new Holder(view);
-    }
+![map](https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcT0CByE94any3Vkr84rlfqrpoVJYM5QdCWs1jIxDqCqPaWJXRaQ)
 
-    @Override
-    public void onBindViewHolder(Holder holder, int position) {
-        holder.text1.setText(data.get(position));
-    }
+- map은 한 데이터를 다른 데이터로 바꾸는 오퍼레이터
+- 원본의 데이터를 변경하지 않고 새로운 스트림을 만들어 냄
 
-    @Override
-    public int getItemCount() {
-        return data.size();
-    }
+- 예제 코드
 
-    public class Holder extends RecyclerView.ViewHolder {
-        TextView text1;
-
-        public Holder(View itemView) {
-            super(itemView);
-            text1 = itemView.findViewById(android.R.id.text1);
+```Java
+simpleObservable
+    .map(new Func1<String, String>() {
+        @Override
+        public String call(String text) {
+            return text.toUpperCase();
         }
-    }
-}
+    })
+    .subscribe(new Action1<String>() {
+        @Override
+        public void call(String text) {
+            ((TextView) findViewById(R.id.textView)).setText(text);
+        }
+    })
+    // 문자열을 대문자로 바꾸는 코드
+```
+
+### flatMap
+
+![flatMap](https://farm8.staticflickr.com/7567/26230104214_635e66ac0b_z.jpg)
+
+- Observable에서 발행한 아이템을 다른 Observable로 만들며, 만들어진 Observable에서 아이템을 발행
+
+### filter
+
+![filter](https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcR6LDpncBpZZsLusC09Ssv0GUgxFTPyY1B5sR1GI6QmzUKqsV75)
+
+- 결과의 취사선택이 가능
+
+### zip
+
+![Zip](http://www.pineappslab.com/img/zip.png)
+
+- Observable을 합성하는 경우에 쓰임.
+- 네트워크 작업으로 사용자의 프로필과 프로필 이미지를 동시에 요청하고, 그 결과를 합성해서 화면에 표현해준다거나 하는 형태의 작업이 필요한 경우 zip() 유용하게 사용
+
+
+### 출처
+
+- 출처 : http://gaemi.github.io/android/2015/05/20/RxJava-with-Android-1-RxJava-%EC%82%AC%EC%9A%A9%ED%95%B4%EB%B3%B4%EA%B8%B0.html
+- 출처: https://pluu.github.io/blog/rx/2015/04/29/rxjava/
+- [reactiveX](http://reactivex.io/)
+
+## TODO
+
+- 위에서 학습한 map, flatmap, zip말고 다른 부분도 공부해보기. [카테고리별Operator](http://reactivex.io/documentation/operators.html)
+
+## Retrospect
+
+- TODO에 적어놓은 것 처럼, category별로 정리된 Operator의 기능들을 공부해봐야 할 것같다. 완벽하게는 아니더라도, 어떤 기능이 있는 지 정도는 공부함으로써, 추후에 필요하면 빠르게 찾을 수 있도록 한다. 
+
+## Output
+
+- 생략
